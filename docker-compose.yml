@@ -1,0 +1,25 @@
+# PostgreSQL for local development.
+# The backend is NOT containerised: it runs on the host and reaches this
+# database purely through DATABASE_URL, so pointing the API at a different
+# database (a branch, a staging copy, a managed Postgres) is a one-line change.
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: todo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: todo
+      POSTGRES_PASSWORD: todo
+      POSTGRES_DB: todo
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todo -d todo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:

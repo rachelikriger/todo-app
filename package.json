@@ -1,0 +1,21 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal full-stack todo app: React + Vite, Express, PostgreSQL",
+  "scripts": {
+    "setup": "npm install && npm run install:all && node -e \"require('fs').copyFileSync('server/.env.example','server/.env',require('fs').constants.COPYFILE_EXCL)\" || echo server/.env already exists",
+    "dev": "npm run db:up && concurrently -n server,client -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v && docker compose up -d",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "typecheck": "npm --prefix server run typecheck && npm --prefix client run typecheck"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}
