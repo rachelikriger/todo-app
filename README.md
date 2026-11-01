@@ -14,18 +14,32 @@ project/
 │       └── todos.ts     CRUD routes
 └── client/              Vite + React UI (port 5173)
     └── src/
-        ├── App.tsx      the entire UI
+        ├── App.tsx      UI component and state
+        ├── styles.css   styling (light + dark mode)
         ├── api.ts       typed fetch wrapper
         └── main.tsx     entry point
 ```
 
-## Running on Windows with Docker Desktop
+## Quick start
 
 **Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-and [Node.js](https://nodejs.org/) 20 or newer.
+(running) and [Node.js](https://nodejs.org/) 20 or newer.
 
-Open **three** terminals (PowerShell) in the project root. In PowerShell, chain
-commands with `;` — `&&` does not work in Windows PowerShell 5.1.
+```powershell
+npm run setup   # once: install all dependencies, create server\.env
+npm run dev     # start Postgres, wait until healthy, run API + UI together
+```
+
+Open <http://localhost:5173>. `Ctrl+C` stops the API and UI; Postgres keeps
+running in the background until `npm run db:down`.
+
+## Running step by step (Windows)
+
+The quick start does all of this for you. Use these steps to run each piece in
+its own terminal, or to troubleshoot.
+
+In PowerShell, chain commands with `;` — `&&` does not work in Windows
+PowerShell 5.1.
 
 ### 1. Start Docker Desktop
 
@@ -36,6 +50,7 @@ that fail with a `500 Internal Server Error ... docker_engine` message.
 ### 2. Install dependencies (once)
 
 ```powershell
+npm install
 npm run install:all
 ```
 
@@ -45,7 +60,7 @@ npm run install:all
 npm run db:up
 ```
 
-Verify it is accepting connections:
+This returns once the container's healthcheck passes. Verify it is accepting connections:
 
 ```powershell
 docker compose ps
@@ -158,8 +173,10 @@ npm run dev:server
 
 | Command                | Effect                                        |
 | ---------------------- | --------------------------------------------- |
+| `npm run setup`        | Install all dependencies, create `server/.env` if missing |
+| `npm run dev`          | Start Postgres, then API + UI in one terminal |
 | `npm run install:all`  | Install server + client dependencies          |
-| `npm run db:up`        | Start PostgreSQL                              |
+| `npm run db:up`        | Start PostgreSQL and wait until it is healthy |
 | `npm run db:down`      | Stop PostgreSQL (data kept in the volume)     |
 | `npm run db:reset`     | Destroy the volume and start a clean database |
 | `npm run dev:server`   | API with reload on change                     |
